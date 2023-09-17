@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Image Classification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+  <style>
+    * {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #131313;
+    }
+
+    .main {
+      background-image: url(../static/uploads/bgimg.png);
+      background-size: cover;
+      min-height: 100vh;
+      background-repeat: no-repeat;
+    }
+
+
+    .header {
+      border-bottom: 1px solid #ffffff;
+      padding: 20px 0;
+      text-align: center;
+    }
+
+    .header .h1 {
+      font-size: 36px;
+      color: #fff;
+    }
+
+    .output-box {
+      min-height: 45vh;
+    }
+
+    form {
+      margin: 20px 0;
+    }
+
+    p {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+  </style>
+  <script>
+    function previewImage() {
+      var preview = document.querySelector('#uploaded-image');
+      var file = document.querySelector('input[type=file]').files[0];
+      var reader = new FileReader();
+      reader.onloadend = function () {
+        preview.src = reader.result;
+      }
+      if (file) {
+        // Read the file as a base64-encoded string
+        reader.readAsDataURL(file);
+      } else {
+        preview.src = "";
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+  <div class="main position-relative">
+    <div class="container">
+
+      <div class="header">
+        <h1 class="h1">Mobile Screen Detection</h1>
+      </div>
+
+      <form method="POST" action="/predict" enctype="multipart/form-data" class="mb-4">
+        <div class="row align-items-end justify-content-center gy-4">
+          <div class="col-md-5">
+
+            <label for="image" class="text-light mb-2">
+              Please Upload the Image of your Device
+            </label>
+            <div class="input-group">
+              <input type="file" class="form-control" name="image" onchange="previewImage()" id="inputGroupFile01" required>
+            </div>
+
+          </div>
+          <div class="col-md-2">
+            <div class="d-flex justify-content-between">
+              <button type="submit" class="btn btn-primary">Classify</button>
+        <!-- <a  href='/'> <button type="submit"  class="btn btn-danger">Reset</button></a> -->
+            </div>
+          </div>
+        </div>
+        
+      </form>
+  <div class="col-md-7">
+    <div class="d-flex justify-content-between">
+      <a  href='/'> <button type="submit"  class="btn btn-danger">Reset</button></a>
+    </div>
+  </div>
+
+      <!-- output box start -->
+
+      <div class="row">
+        <div class="col-md-4 offset-md-1">
+          <img id="uploaded-image" class="img-fluid">
+        </div>
+      </div>
+
+      <div class="row justify-content-center output-box my-4">
+
+        <div class="col-md-4 text-center">
+          {% if image_url %}
+          <img src="{{ image_url }}" alt="" class="img-fluid">
+        </div>
+
+        <div class="col-md-6 ps-4">
+          <p class="text-warning fs-5 fw-normal">
+            Validating ... If its a phone or Not
+            <br>
+            <span class="text-light fs-6">Validation Complete, Its a -
+              <span class="fs-5 fw-bold">{{Category}}</span></span>
+          </p>
+          <p class="text-warning fs-5">
+            Validating ... If phone cracked or Not
+            <br>
+            <span class="text-light fs-6">Validation Complete, Its a -
+              <span class="fs-5 fw-bold">{{ label }}</span></span>
+          </p>
+
+          <p class="text-warning fs-5">
+            Assessing The damage level
+            <br>
+            <span class="text-light fs-6">
+              Assesment Complete Your Device is:
+              <span class="fs-5 fw-bold">{{decision}}</span></span>
+          </p>
+
+
+          {% endif %}
+
+          <p class="error text-danger">
+            {% if error %}
+          </p>
+
+          <p class="error text-danger">
+            {{ error }}
+          </p>
+
+          {% endif %}
+
+
+
+
+        </div>
+
+
+
+      </div>
+
+
+    </div>
+
+    <p class="text-danger notice fs-5 text-center mt-3 mb-0 pb-4">
+      Note:This App is in development and may occasionaly generate Incorrect
+      results
+    </p>
+
+  </div>
+
+</body>
+
+</html>

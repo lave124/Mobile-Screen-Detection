@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Image Classification</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+      }
+      h1 {
+        font-size: 36px;
+        margin-bottom: 20px;
+      }
+      form {
+        margin: 20px 0;
+      }
+      input[type=file] {
+        display: block;
+        margin: 0 auto 20px;
+        font-size: 16px;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        color: #333;
+        outline: none;
+        max-width: 100%;
+      }
+      button[type=submit] {
+        display: block;
+        margin: 0 auto;
+        font-size: 18px;
+        padding: 10px 20px;
+        border-radius: 5px;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+      }
+      button[type=submit]:hover {
+        background-color: #0062cc;
+      }
+      img {
+        display: block;
+        margin: 0 auto;
+        max-width: 500px;
+        height: auto;
+      }
+      h2 {
+        font-size: 24px;
+        margin-top: 40px;
+      }
+    </style>
+    <script>
+      function previewImage() {
+        var preview = document.querySelector('img');
+        var file = document.querySelector('input[type=file]').files[0];
+        var reader = new FileReader();
+        reader.onloadend = function() {
+          preview.src = reader.result;
+        }
+        if (file) {
+          reader.readAsDataURL(file);
+        } else {
+          preview.src = "";
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Mobile Screen Detection</h1>
+      <form method="POST" action="/predict" enctype="multipart/form-data">
+        <input type="file" name="image" onchange="previewImage()">
+        <button type="submit">Classify</button>
+      </form>
+      <img src="" alt="Uploaded Image">
+      {% if image_url %}
+        <h2>{{ label }}</h2><p>IF  Your are Seeing Incorrect Answer Please ensure The Mobile is TurnedOff</p>
+        <img src="{{ image_url }}" alt="Uploaded Image">
+      {% endif %}
+      {% if error %}
+        <p class="error">{{ error }}</p>
+      {% endif %}
+      
+    </div>
+  </body>
+</html>
